@@ -8,6 +8,7 @@ let probability = 0.5;
 let boardHeight = 3;
 let boardWidth = 3;
 let cellSize = 32;
+let currentStep = 0;
 
 let boardStates = [];
 
@@ -83,14 +84,15 @@ function addControllListeners() {
         initialiseBoard();
     });
     document.getElementById("stepForward").addEventListener("click", function() {
-        console.log("One step forward");
+        stepForward();
     });
     document.getElementById("stepBackward").addEventListener("click", function() {
-        console.log("One step backward");
+        stepBackward();
     });
 }
 
 function initialiseBoard() {
+    currentStep = 0;
     boardStates[0] = [];
     for (let row = 0; row < boardHeight; row++) {
         let rowCells = [];
@@ -100,6 +102,10 @@ function initialiseBoard() {
         }
         boardStates[0][row] = rowCells;
     }
+    updateShownBoard(0);
+}
+
+function updateShownBoard(stepNum) {
     document.getElementById("board").innerHTML="";
     for (let row = 0; row < boardHeight; row++) {
         let rowDiv = document.createElement("div");
@@ -109,7 +115,7 @@ function initialiseBoard() {
             let cell = document.createElement("div");
             cell.className="cell";
             cell.id=row + "|" + column;
-            if (boardStates[0][row][column]) {
+            if (boardStates[stepNum][row][column]) {
                 cell.style.backgroundColor = "#00AA00";
             } else {
                 cell.style.backgroundColor = "#000000";
@@ -118,5 +124,65 @@ function initialiseBoard() {
         }
         document.getElementById("board").appendChild(rowDiv);
     }
-    console.log(boardStates);
 }
+
+function stepForward() {
+    if (boardStates[0] == undefined) {
+        initialiseBoard();
+    }
+    boardStates[currentStep+1] = [];
+    let nextBoard = boardStates[currentStep+1];
+    for (let row = 0; row < boardWidth; row++) {
+        nextBoard[row] = [];
+        for (let column = 0; column < boardHeight; column++) {
+            let neighbours = countNeighbours(row, column, currentStep);
+            if (boardStates[currentStep][row][column] && neighbours == 2) {
+                nextBoard[row][column] = true;
+            } else if (neighbours == 3) {
+                nextBoard[row][column] = true;
+            } else {
+                nextBoard[row][column] = false;
+            }
+        }
+    }
+    currentStep++;
+    boardStates[currentStep] = nextBoard;
+    updateShownBoard(currentStep);
+}
+
+function stepBackward() {
+    if (currentStep == 0) {
+        alert("There are no previous states!");
+    } else {
+        currentStep--;
+        updateShownBoard(currentStep);
+    }
+}
+
+function countNeighbours(row, column, currentBoard) {
+    let neighbours = 0;
+    for (let checkRow = row-1; checkRow <= row+1; checkRow ++) {
+        for (let checkColumn = column-1; checkColumn <= column+1; checkColumn++) {
+            if (!(checkRow == row && checkColumn == column)) {
+                neighbours += safeValueAt(checkRow, checkColumn, currentBoard);
+            }
+        }
+    }
+    return neighbours;
+}
+
+function safeValueAt(row, column, currentBoard) {
+    if (row < 0 || column < 0 || boardHeight == row || boardWidth == column) {
+        return 0;
+    } else {
+        if (boardStates[currentBoard][row][column]) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+}
+
+//Autorun
+//Start autorun
+//Stop autorun
