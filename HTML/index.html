@@ -11,36 +11,37 @@
     <body>
         <header>
             <div class="controllSection">
-                <!--Frequency-->
+                <label>Steps per second</label><br>
                 <input id="frequencySlider" type="range" min="0.1" max="10.0" step="0.1" value="5.0">
                 <input id="frequencyInput" type="number" min="0.1" max="10.0" step="0.1" value="5.0">
             </div>
             <div class="controllSection">
-                <!--Probability-->
+                <label>Probability for each cell to be alive (0 to 1)</label><br>
                 <input id="probabilitySlider" type="range" min="0.00" max="1.00" step="0.01" value="0.5">
                 <input id="probabilityInput" type="number" min="0.00" max="1.00" step="0.01" value="0.5">
             </div>
             <div class="controllSection">
-                <!--Board Height-->
+                <label>Board height (in cells)</label><br>
                 <input id="boardHeightSlider" type="range" min="1" max="100" step="1" value="3">
                 <input id="boardHeightInput" type="number" min="1" max="100" step="1" value="3">
                 <br>
-                <!--Board Width-->
+                <label>Board width (in cells)</label><br>
                 <input  id="boardWidthSlider" type="range" min="1" max="100" step="1" value="3">
                 <input  id="boardWidthInput" type="number" min="1" max="100" step="1" value="3">
             </div>
             <div class="controllSection">
+                <label>Autorun controlls</label><br>
                 <button id="startRun">Start</button>
                 <button id="stopRun">Stop</button>
                 <button id="resetRun">Reset</button>
             </div>
             <div class="controllSection">
-                <button id="stepForward">Step Backward</button>
-                <button id="toggleRun">Run</button> <!--Toggle autostep-->
-                <button id="stepBackward">Step Forward</button>
+                <label>Manual controlls</label><br>
+                <button id="stepBackward">Step Backward</button>
+                <button id="stepForward">Step Forward</button>
             </div>
             <div class="controllSection">
-                <!--*Cell Dimension-->
+                <label>Cell dimension (in pixels per side)</label><br>
                 <input id="cellSizeSlider" type="range" min="16" max="128" step="1" value="32">
                 <input id="cellSizeInput" type="number" min="16" max="128" step="1" value="32">
             </div>

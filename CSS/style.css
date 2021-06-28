@@ -24,9 +24,10 @@ footer{
 }
 
 .cell{
-    background-color: red;
+    background-color: #000000;
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    margin: -2px -5px;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    padding: 0;
 }
