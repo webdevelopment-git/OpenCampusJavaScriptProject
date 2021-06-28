@@ -89,12 +89,17 @@ function addControllListeners() {
     document.getElementById("stopRun").addEventListener("click", function() {
         stopRun();
     });
-    document.getElementById("resetRun").addEventListener("click", function() {
+    document.getElementById("reinitialiseRun").addEventListener("click", function() {
         clearInterval(interval);
         initialiseBoard();
     });
     document.getElementById("stepForward").addEventListener("click", function() {
         stepForward();
+    });
+    document.getElementById("resetRun").addEventListener("click", function() {
+        clearInterval(interval);
+        updateShownBoard(0);
+        currentStep = 0;
     });
     document.getElementById("stepBackward").addEventListener("click", function() {
         stepBackward();

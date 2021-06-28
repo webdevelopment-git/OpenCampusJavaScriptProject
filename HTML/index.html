@@ -28,12 +28,15 @@
                 <label>Board width (in cells)</label><br>
                 <input  id="boardWidthSlider" type="range" min="1" max="100" step="1" value="3">
                 <input  id="boardWidthInput" type="number" min="1" max="100" step="1" value="3">
+                <br>
+                <label>Cell dimension (in pixels per side)</label><br>
+                <input id="cellSizeSlider" type="range" min="1" max="100" step="1" value="50">
+                <input id="cellSizeInput" type="number" min="1" max="100" step="1" value="50">
             </div>
             <div class="controllSection">
                 <label>Autorun controlls</label><br>
                 <button id="startRun">Start</button>
                 <button id="stopRun">Stop</button>
-                <button id="resetRun">Reset</button>
             </div>
             <div class="controllSection">
                 <label>Manual controlls</label><br>
@@ -41,9 +44,9 @@
                 <button id="stepForward">Step Forward</button>
             </div>
             <div class="controllSection">
-                <label>Cell dimension (in pixels per side)</label><br>
-                <input id="cellSizeSlider" type="range" min="1" max="100" step="1" value="50">
-                <input id="cellSizeInput" type="number" min="1" max="100" step="1" value="50">
+                <label>Setback controlls</label><br>
+                <button id="resetRun">Reset to first state</button>
+                <button id="reinitialiseRun">Reinitialise board</button>
             </div>
         </header>
         <main>
