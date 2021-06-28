@@ -9,7 +9,7 @@ let boardHeight = 3;
 let boardWidth = 3;
 let cellSize = 32;
 let currentStep = 0;
-
+let interval;
 let boardStates = [];
 
 function keepValuesUpdated() {
@@ -54,6 +54,10 @@ function keepValuesUpdated() {
     document.getElementById("cellSizeSlider").addEventListener("change", function(){
         cellSize = document.getElementById("cellSizeSlider").value;
         document.getElementById("cellSizeInput").value = cellSize;
+        let rowDivs = document.getElementsByClassName("row");
+        for (let i = 0; i < rowDivs.length; i++) {
+            rowDivs[i].style.height = cellSize + "px";
+        }
         let cellDivs = document.getElementsByClassName("cell");
         for (let i = 0; i < cellDivs.length; i++) {
             cellDivs[i].style.width = cellSize + "px";
@@ -63,6 +67,12 @@ function keepValuesUpdated() {
     document.getElementById("cellSizeInput").addEventListener("change", function(){
         cellSize = document.getElementById("cellSizeInput").value;
         document.getElementById("cellSizeSlider").value = cellSize;
+        let rowDivs = document.getElementsByClassName("row");
+        for (let i = 0; i < rowDivs.length; i++) {
+            rowDivs[i].style.height = cellSize + "px";
+            let rowWidth = boardWidth * cellSize;
+            rowDivs[i].style.width = rowWidth + "px";
+        }
         let cellDivs = document.getElementsByClassName("cell");
         for (let i = 0; i < cellDivs.length; i++) {
             cellDivs[i].style.width = cellSize + "px";
@@ -73,14 +83,14 @@ function keepValuesUpdated() {
 
 function addControllListeners() {
     document.getElementById("startRun").addEventListener("click", function() {
-        console.log("Start run");
         initialiseBoard();
+        startRun();
     });
     document.getElementById("stopRun").addEventListener("click", function() {
-        console.log("Stop run");
+        stopRun();
     });
     document.getElementById("resetRun").addEventListener("click", function() {
-        console.log("Reset run");
+        clearInterval(interval);
         initialiseBoard();
     });
     document.getElementById("stepForward").addEventListener("click", function() {
@@ -102,20 +112,21 @@ function initialiseBoard() {
         }
         boardStates[0][row] = rowCells;
     }
-    updateShownBoard(0);
-}
-
-function updateShownBoard(stepNum) {
     document.getElementById("board").innerHTML="";
     for (let row = 0; row < boardHeight; row++) {
         let rowDiv = document.createElement("div");
         rowDiv.className = "row";
         rowDiv.id = "row"+row;
+        rowDiv.style.height = cellSize + "px";
+        let rowWidth = boardWidth * cellSize;
+        rowDiv.style.width = rowWidth + "px";
         for (let column = 0; column < boardWidth; column++) {
             let cell = document.createElement("div");
             cell.className="cell";
             cell.id=row + "|" + column;
-            if (boardStates[stepNum][row][column]) {
+            cell.style.width = cellSize + "px";
+            cell.style.height = cellSize + "px";
+            if (boardStates[0][row][column]) {
                 cell.style.backgroundColor = "#00AA00";
             } else {
                 cell.style.backgroundColor = "#000000";
@@ -126,15 +137,24 @@ function updateShownBoard(stepNum) {
     }
 }
 
+function updateShownBoard(stepNum) {
+    for (let row = 0; row < boardHeight; row++) {
+        for (let column = 0; column < boardWidth; column++) {
+            let cell = document.getElementById(row + "|" + column);
+            cell.style.backgroundColor = boardStates[stepNum][row][column] ? "#00AA00" : "#000000";
+        }
+    }
+}
+
 function stepForward() {
     if (boardStates[0] == undefined) {
         initialiseBoard();
     }
     boardStates[currentStep+1] = [];
     let nextBoard = boardStates[currentStep+1];
-    for (let row = 0; row < boardWidth; row++) {
+    for (let row = 0; row < boardHeight; row++) {
         nextBoard[row] = [];
-        for (let column = 0; column < boardHeight; column++) {
+        for (let column = 0; column < boardWidth; column++) {
             let neighbours = countNeighbours(row, column, currentStep);
             if (boardStates[currentStep][row][column] && neighbours == 2) {
                 nextBoard[row][column] = true;
@@ -172,7 +192,7 @@ function countNeighbours(row, column, currentBoard) {
 }
 
 function safeValueAt(row, column, currentBoard) {
-    if (row < 0 || column < 0 || boardHeight == row || boardWidth == column) {
+    if (row < 0 || column < 0 || boardHeight <= row || boardWidth <= column) {
         return 0;
     } else {
         if (boardStates[currentBoard][row][column]) {
@@ -183,6 +203,12 @@ function safeValueAt(row, column, currentBoard) {
     }
 }
 
-//Autorun
-//Start autorun
-//Stop autorun
+function startRun() {
+    interval = setInterval(() => {
+        stepForward();
+    }, (1000/frequency));
+}
+
+function stopRun() {
+    clearInterval(interval);
+}
