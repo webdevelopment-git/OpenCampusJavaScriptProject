@@ -13,7 +13,8 @@ cellSize: 50
 let currentStep = 0;
 let interval;
 let isRunning = false;
-let boardStates = [];
+let cellToggling = false;
+let boardStates = [[[false, false, false], [false, false, false], [false, false, false]]];
 
 function keepSingleValueUpdated(valuePair) {
     let inputTypes = ["Slider", "Input"];
@@ -81,12 +82,29 @@ function addControllListeners() {
     });
     document.getElementById("toggleRun").addEventListener("click", function() {
         toggleRun();
-    })
+    });
+    document.getElementById("clearBoard").addEventListener("click", function() {
+        clearBoard();
+    });
+    document.getElementById("toggleCellToggling").addEventListener("click", function() {
+        toggleCellToggling();
+    });
+    
+    for (let row = 0; row < simulationParameters["boardHeight"]; row++) {
+        for (let column = 0; column < simulationParameters["boardWidth"]; column++) {
+            document.getElementById(row + "|" + column).addEventListener("click", function() {
+                if (cellToggling) {
+                    boardStates[currentStep][row][column] = !boardStates[currentStep][row][column];
+                    updateShownBoard(currentStep);
+                }
+            })
+        }
+    }
 }
 
 function initialiseBoard() {
     currentStep = 0;
-    boardStates[0] = [];
+    boardStates = [[[false, false, false], [false, false, false], [false, false, false]]];
     for (let row = 0; row < simulationParameters["boardHeight"]; row++) {
         let rowCells = [];
         for (let column = 0; column < simulationParameters["boardWidth"]; column++) {
@@ -113,6 +131,16 @@ function initialiseBoard() {
             rowDiv.appendChild(cell);
         }
         document.getElementById("board").appendChild(rowDiv);
+    }
+    for (let row = 0; row < simulationParameters["boardHeight"]; row++) {
+        for (let column = 0; column < simulationParameters["boardWidth"]; column++) {
+            document.getElementById(row + "|" + column).addEventListener("click", function() {
+                if (cellToggling) {
+                    boardStates[currentStep][row][column] = !boardStates[currentStep][row][column];
+                    updateShownBoard(currentStep);
+                }
+            })
+        }
     }
 }
 
@@ -202,4 +230,26 @@ function setVisibility(visibility) {
     }
     document.getElementById("stepForward").style.visibility = visibility;
     document.getElementById("stepBackward").style.visibility = visibility;
+}
+
+function clearBoard() {
+    boardStates = [];
+    let nextBoard = [];
+    for (let row = 0; row < simulationParameters["boardHeight"]; row++) {
+        let rowCells = [];
+        for (let column = 0; column < simulationParameters["boardWidth"]; column++) {
+            rowCells[column] = false;
+        }
+        nextBoard[row] = rowCells;
+    }
+    currentStep = 0;
+    boardStates[currentStep] = nextBoard;
+    updateShownBoard(currentStep);
+    stopRun();
+}
+
+function toggleCellToggling() {
+    document.getElementById("toggleCellToggling").innerText = (cellToggling) ?
+    "Enable cell toggling" : "Disable cell toggling";
+    cellToggling = !cellToggling;
 }
