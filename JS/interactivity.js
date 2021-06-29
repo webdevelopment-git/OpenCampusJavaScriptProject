@@ -3,83 +3,62 @@ document.addEventListener("DOMContentLoaded", function() {
     addControllListeners();
 });
 
-let frequency = 5.0;
-let probability = 0.5;
-let boardHeight = 3;
-let boardWidth = 3;
-let cellSize = 32;
+let simulationParameters = {
+frequency: 5.0,
+probability: 0.5,
+boardHeight: 3,
+boardWidth: 3,
+cellSize: 50
+};
 let currentStep = 0;
 let interval;
 let isRunning = false;
 let boardStates = [];
 
+function keepSingleValueUpdated(valuePair) {
+    let inputTypes = ["Slider", "Input"];
+    for (let i = 0; i < inputTypes.length; i++) {
+        document.getElementById(valuePair[0] + inputTypes[i%2]).addEventListener("change", function(){
+            simulationParameters[valuePair[0]] = document.getElementById(valuePair[0] + inputTypes[i%2]).value;
+            document.getElementById(valuePair[0] + inputTypes[(i+1)%2]).value = simulationParameters[valuePair[0]];
+            if (valuePair[1]) {
+                initialiseBoard();
+            }
+        });
+    }
+}
+
 function keepValuesUpdated() {
-    document.getElementById("frequencySlider").addEventListener("change", function(){
-        frequency = document.getElementById("frequencySlider").value;
-        document.getElementById("frequencyInput").value = frequency;
-    });
-    document.getElementById("frequencyInput").addEventListener("change", function(){
-        frequency = document.getElementById("frequencyInput").value;
-        document.getElementById("frequencySlider").value = frequency;
-    });
-    document.getElementById("probabilitySlider").addEventListener("change", function(){
-        probability = document.getElementById("probabilitySlider").value;
-        document.getElementById("probabilityInput").value = probability;
-        initialiseBoard();
-    });
-    document.getElementById("probabilityInput").addEventListener("change", function(){
-        probability = document.getElementById("probabilityInput").value;
-        document.getElementById("probabilitySlider").value = probability;
-        initialiseBoard();
-    });
-    document.getElementById("boardHeightSlider").addEventListener("change", function(){
-        boardHeight = document.getElementById("boardHeightSlider").value;
-        document.getElementById("boardHeightInput").value = boardHeight;
-        initialiseBoard();
-    });
-    document.getElementById("boardHeightInput").addEventListener("change", function(){
-        boardHeight = document.getElementById("boardHeightInput").value;
-        document.getElementById("boardHeightSlider").value = boardHeight;
-        initialiseBoard();
-    });
-    document.getElementById("boardWidthSlider").addEventListener("change", function(){
-        boardWidth = document.getElementById("boardWidthSlider").value;
-        document.getElementById("boardWidthInput").value = boardWidth;
-        initialiseBoard();
-    });
-    document.getElementById("boardWidthInput").addEventListener("change", function(){
-        boardWidth = document.getElementById("boardWidthInput").value;
-        document.getElementById("boardWidthSlider").value = boardWidth;
-        initialiseBoard();
-    });
+    let valuePairs = [["frequency", false], ["probability", true], ["boardHeight", true], ["boardWidth", true]];
+    valuePairs.forEach(keepSingleValueUpdated);
     document.getElementById("cellSizeSlider").addEventListener("change", function(){
-        cellSize = document.getElementById("cellSizeSlider").value;
-        document.getElementById("cellSizeInput").value = cellSize;
+        simulationParameters["cellSize"] = document.getElementById("cellSizeSlider").value;
+        document.getElementById("cellSizeInput").value = simulationParameters["cellSize"];
         let rowDivs = document.getElementsByClassName("row");
         for (let i = 0; i < rowDivs.length; i++) {
-            rowDivs[i].style.height = cellSize + "px";
-            let rowWidth = boardWidth * cellSize;
+            rowDivs[i].style.height = simulationParameters["cellSize"] + "px";
+            let rowWidth = simulationParameters["boardWidth"] * simulationParameters["cellSize"];
             rowDivs[i].style.width = rowWidth + "px";
         }
         let cellDivs = document.getElementsByClassName("cell");
         for (let i = 0; i < cellDivs.length; i++) {
-            cellDivs[i].style.width = cellSize + "px";
-            cellDivs[i].style.height = cellSize + "px";
+            cellDivs[i].style.width = simulationParameters["cellSize"] + "px";
+            cellDivs[i].style.height = simulationParameters["cellSize"] + "px";
         }
     });
     document.getElementById("cellSizeInput").addEventListener("change", function(){
-        cellSize = document.getElementById("cellSizeInput").value;
-        document.getElementById("cellSizeSlider").value = cellSize;
+        simulationParameters["cellSize"] = document.getElementById("cellSizeInput").value;
+        document.getElementById("cellSizeSlider").value = simulationParameters["cellSize"];
         let rowDivs = document.getElementsByClassName("row");
         for (let i = 0; i < rowDivs.length; i++) {
-            rowDivs[i].style.height = cellSize + "px";
-            let rowWidth = boardWidth * cellSize;
+            rowDivs[i].style.height = simulationParameters["cellSize"] + "px";
+            let rowWidth = simulationParameters["boardWidth"] * simulationParameters["cellSize"];
             rowDivs[i].style.width = rowWidth + "px";
         }
         let cellDivs = document.getElementsByClassName("cell");
         for (let i = 0; i < cellDivs.length; i++) {
-            cellDivs[i].style.width = cellSize + "px";
-            cellDivs[i].style.height = cellSize + "px";
+            cellDivs[i].style.width = simulationParameters["cellSize"] + "px";
+            cellDivs[i].style.height = simulationParameters["cellSize"] + "px";
         }
     });
 }
@@ -108,33 +87,29 @@ function addControllListeners() {
 function initialiseBoard() {
     currentStep = 0;
     boardStates[0] = [];
-    for (let row = 0; row < boardHeight; row++) {
+    for (let row = 0; row < simulationParameters["boardHeight"]; row++) {
         let rowCells = [];
-        for (let column = 0; column < boardWidth; column++) {
+        for (let column = 0; column < simulationParameters["boardWidth"]; column++) {
             let randomNum = Math.floor(Math.random()*100)+1;
-            rowCells[column] = (randomNum <= probability*100);
+            rowCells[column] = (randomNum <= simulationParameters["probability"]*100);
         }
         boardStates[0][row] = rowCells;
     }
     document.getElementById("board").innerHTML="";
-    for (let row = 0; row < boardHeight; row++) {
+    for (let row = 0; row < simulationParameters["boardHeight"]; row++) {
         let rowDiv = document.createElement("div");
         rowDiv.className = "row";
         rowDiv.id = "row"+row;
-        rowDiv.style.height = cellSize + "px";
-        let rowWidth = boardWidth * cellSize;
+        rowDiv.style.height = simulationParameters["cellSize"] + "px";
+        let rowWidth = simulationParameters["boardWidth"] * simulationParameters["cellSize"];
         rowDiv.style.width = rowWidth + "px";
-        for (let column = 0; column < boardWidth; column++) {
+        for (let column = 0; column < simulationParameters["boardWidth"]; column++) {
             let cell = document.createElement("div");
             cell.className="cell";
-            cell.id=row + "|" + column;
-            cell.style.width = cellSize + "px";
-            cell.style.height = cellSize + "px";
-            if (boardStates[0][row][column]) {
-                cell.style.backgroundColor = "#006600";
-            } else {
-                cell.style.backgroundColor = "#000000";
-            }
+            cell.id = row + "|" + column;
+            cell.style.width = simulationParameters["cellSize"] + "px";
+            cell.style.height = simulationParameters["cellSize"] + "px";
+            cell.style.backgroundColor = (boardStates[0][row][column]) ? "#006600" : "#000000";
             rowDiv.appendChild(cell);
         }
         document.getElementById("board").appendChild(rowDiv);
@@ -142,8 +117,8 @@ function initialiseBoard() {
 }
 
 function updateShownBoard(stepNum) {
-    for (let row = 0; row < boardHeight; row++) {
-        for (let column = 0; column < boardWidth; column++) {
+    for (let row = 0; row < simulationParameters["boardHeight"]; row++) {
+        for (let column = 0; column < simulationParameters["boardWidth"]; column++) {
             let cell = document.getElementById(row + "|" + column);
             cell.style.backgroundColor = boardStates[stepNum][row][column] ? "#006600" : "#000000";
         }
@@ -156,17 +131,12 @@ function stepForward() {
     }
     boardStates[currentStep+1] = [];
     let nextBoard = boardStates[currentStep+1];
-    for (let row = 0; row < boardHeight; row++) {
+    for (let row = 0; row < simulationParameters["boardHeight"]; row++) {
         nextBoard[row] = [];
-        for (let column = 0; column < boardWidth; column++) {
+        for (let column = 0; column < simulationParameters["boardWidth"]; column++) {
             let neighbours = countNeighbours(row, column, currentStep);
-            if (boardStates[currentStep][row][column] && neighbours == 2) {
-                nextBoard[row][column] = true;
-            } else if (neighbours == 3) {
-                nextBoard[row][column] = true;
-            } else {
-                nextBoard[row][column] = false;
-            }
+            nextBoard[row][column] =
+            (boardStates[currentStep][row][column] && neighbours == 2) || (neighbours == 3);
         }
     }
     currentStep++;
@@ -196,15 +166,9 @@ function countNeighbours(row, column, currentBoard) {
 }
 
 function safeValueAt(row, column, currentBoard) {
-    if (row < 0 || column < 0 || boardHeight <= row || boardWidth <= column) {
-        return 0;
-    } else {
-        if (boardStates[currentBoard][row][column]) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
+    return !(row < 0 || column < 0 || simulationParameters["boardHeight"] <= row
+    || simulationParameters["boardWidth"] <= column) &&
+    (boardStates[currentBoard][row][column]);
 }
 
 function toggleRun() {
@@ -213,19 +177,10 @@ function toggleRun() {
     } else {
         interval = setInterval(() => {
             stepForward();
-        }, (1000/frequency));
+        }, (1000/simulationParameters["frequency"]));
         document.getElementById("toggleRun").innerText = "Stop";
         isRunning = true;
-        let controllsToBeHidden = document.getElementsByTagName("input");
-        for (let i = 0; i < controllsToBeHidden.length; i++) {
-            controllsToBeHidden[i].style.visibility = "hidden";
-        }
-        let labelToBeHidden = document.getElementsByTagName("label");
-        for (let i = 0; i < labelToBeHidden.length; i++) {
-            labelToBeHidden[i].style.visibility = "hidden";
-        }
-        document.getElementById("stepForward").style.visibility = "hidden";
-        document.getElementById("stepBackward").style.visibility = "hidden";
+        setVisibility("hidden");
     }
 }
 
@@ -233,14 +188,18 @@ function stopRun() {
     clearInterval(interval);
     isRunning = false;
     document.getElementById("toggleRun").innerText = "Start";
-    let controllsToBeRevealed = document.getElementsByTagName("input");
-    for (let i = 0; i < controllsToBeRevealed.length; i++) {
-        controllsToBeRevealed[i].style.visibility = "visible";
+    setVisibility("visible");
+}
+
+function setVisibility(visibility) {
+    let controllsToBeHidden = document.getElementsByTagName("input");
+    for (let i = 0; i < controllsToBeHidden.length; i++) {
+        controllsToBeHidden[i].style.visibility = visibility;
     }
     let labelToBeHidden = document.getElementsByTagName("label");
     for (let i = 0; i < labelToBeHidden.length; i++) {
-        labelToBeHidden[i].style.visibility = "visible";
+        labelToBeHidden[i].style.visibility = visibility;
     }
-    document.getElementById("stepForward").style.visibility = "visible";
-    document.getElementById("stepBackward").style.visibility = "visible";
+    document.getElementById("stepForward").style.visibility = visibility;
+    document.getElementById("stepBackward").style.visibility = visibility;
 }
