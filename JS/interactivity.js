@@ -10,6 +10,7 @@ let boardWidth = 3;
 let cellSize = 32;
 let currentStep = 0;
 let interval;
+let isRunning = false;
 let boardStates = [];
 
 function keepValuesUpdated() {
@@ -57,6 +58,8 @@ function keepValuesUpdated() {
         let rowDivs = document.getElementsByClassName("row");
         for (let i = 0; i < rowDivs.length; i++) {
             rowDivs[i].style.height = cellSize + "px";
+            let rowWidth = boardWidth * cellSize;
+            rowDivs[i].style.width = rowWidth + "px";
         }
         let cellDivs = document.getElementsByClassName("cell");
         for (let i = 0; i < cellDivs.length; i++) {
@@ -82,28 +85,24 @@ function keepValuesUpdated() {
 }
 
 function addControllListeners() {
-    document.getElementById("startRun").addEventListener("click", function() {
-        initialiseBoard();
-        startRun();
-    });
-    document.getElementById("stopRun").addEventListener("click", function() {
-        stopRun();
-    });
     document.getElementById("reinitialiseRun").addEventListener("click", function() {
-        clearInterval(interval);
+        stopRun();
         initialiseBoard();
     });
     document.getElementById("stepForward").addEventListener("click", function() {
         stepForward();
     });
     document.getElementById("resetRun").addEventListener("click", function() {
-        clearInterval(interval);
+        stopRun();
         updateShownBoard(0);
         currentStep = 0;
     });
     document.getElementById("stepBackward").addEventListener("click", function() {
         stepBackward();
     });
+    document.getElementById("toggleRun").addEventListener("click", function() {
+        toggleRun();
+    })
 }
 
 function initialiseBoard() {
@@ -132,7 +131,7 @@ function initialiseBoard() {
             cell.style.width = cellSize + "px";
             cell.style.height = cellSize + "px";
             if (boardStates[0][row][column]) {
-                cell.style.backgroundColor = "#00AA00";
+                cell.style.backgroundColor = "#006600";
             } else {
                 cell.style.backgroundColor = "#000000";
             }
@@ -146,7 +145,7 @@ function updateShownBoard(stepNum) {
     for (let row = 0; row < boardHeight; row++) {
         for (let column = 0; column < boardWidth; column++) {
             let cell = document.getElementById(row + "|" + column);
-            cell.style.backgroundColor = boardStates[stepNum][row][column] ? "#00AA00" : "#000000";
+            cell.style.backgroundColor = boardStates[stepNum][row][column] ? "#006600" : "#000000";
         }
     }
 }
@@ -208,12 +207,40 @@ function safeValueAt(row, column, currentBoard) {
     }
 }
 
-function startRun() {
-    interval = setInterval(() => {
-        stepForward();
-    }, (1000/frequency));
+function toggleRun() {
+    if (isRunning) {
+        stopRun();
+    } else {
+        interval = setInterval(() => {
+            stepForward();
+        }, (1000/frequency));
+        document.getElementById("toggleRun").innerText = "Stop";
+        isRunning = true;
+        let controllsToBeHidden = document.getElementsByTagName("input");
+        for (let i = 0; i < controllsToBeHidden.length; i++) {
+            controllsToBeHidden[i].style.visibility = "hidden";
+        }
+        let labelToBeHidden = document.getElementsByTagName("label");
+        for (let i = 0; i < labelToBeHidden.length; i++) {
+            labelToBeHidden[i].style.visibility = "hidden";
+        }
+        document.getElementById("stepForward").style.visibility = "hidden";
+        document.getElementById("stepBackward").style.visibility = "hidden";
+    }
 }
 
 function stopRun() {
     clearInterval(interval);
+    isRunning = false;
+    document.getElementById("toggleRun").innerText = "Start";
+    let controllsToBeRevealed = document.getElementsByTagName("input");
+    for (let i = 0; i < controllsToBeRevealed.length; i++) {
+        controllsToBeRevealed[i].style.visibility = "visible";
+    }
+    let labelToBeHidden = document.getElementsByTagName("label");
+    for (let i = 0; i < labelToBeHidden.length; i++) {
+        labelToBeHidden[i].style.visibility = "visible";
+    }
+    document.getElementById("stepForward").style.visibility = "visible";
+    document.getElementById("stepBackward").style.visibility = "visible";
 }

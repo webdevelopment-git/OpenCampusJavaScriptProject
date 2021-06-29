@@ -1,37 +1,125 @@
+html, body {
+    height: 100%;
+    background-color: #112222;
+}
+
 header{
     width: 100%;
-    background-color: #DDDDDD;
+    display: flex;
+    height: 17.5%;
+    border-bottom: solid #000000 2px;
+    align-items: center;
+}
+
+h1 {
+    font-size: 3em;
+    color: #006600;
+    text-decoration: underline;
+    margin: 1% 0 3.5% 0;
+}
+
+button {
+    margin: 0.5% 0.5%;
+    width: 20%;
+    background: #506050;
+    border: none;
+    border-radius: 10px;
+}
+
+em {
+    font-style: italic;
 }
 
 main{
     margin: 10px;
-    overflow: scroll;
+    overflow-x: auto;
+    clear: both;
+    min-height: 66%;
+    display: flex;
+    align-items: center;
+}
+
+input {
+    -webkit-appearance: none;
+    background: #506050;
+    border: none;
+    text-align: center;
+}
+
+input[type="range"] {
+    border-radius: 10px;
+}
+
+#board {
+    width: min-content;
+    height: 100%;
+    margin: 0 auto;
 }
 
 footer{
-    background-color: #DDDDDD;
+    border-top: solid #000000 2px;
+    text-align: center;
+}
+
+footer p {
+    margin: 1%;
+}
+
+a {
+    background-color: #506050;
+    color: black;
+    border-radius: 5px;
+    text-decoration: none;
+    padding: 2px;
 }
 
 .controllSection {
     display: block;
-    margin: 20px;
+    float: left;
+    text-align: center;
+    height: 100%;
+    width: 33%;
 }
 
-.controllSection:first-child{
-    margin-top: 0;
+.controllSection:nth-child(2) {
+    width: 34%;
 }
-.controllSection:last-child{
-    margin-bottom: 0;
+
+#cellLifeControlls, #sizeControlls {
+    width: 100%;
+    margin-top: 9%;
+}
+
+#cellLifeControlls div {
+    float: left;
+    width: 50%;
+}
+
+#sizeControlls div {
+    float: left;
+    width: 30%;
+}
+
+label {
+    display: inline-block;
+    height: 2em;
+    margin-top: 1rem;
+    margin-bottom: 1%;
+    color: #006600;
+}
+
+#sizeControlls div:last-child {
+    width: 40%;
 }
 
 .cell{
     background-color: #000000;
     float:left;
-    width: 32px;
-    height: 32px;
+    width: 50px;
+    height: 50px;
 }
 
 .row{
-    height: 32px;
-    width: 96px;
+    height: 50px;
+    width: 150px;
 }

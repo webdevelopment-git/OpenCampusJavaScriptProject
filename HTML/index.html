@@ -11,42 +11,52 @@
     <body>
         <header>
             <div class="controllSection">
-                <label>Steps per second</label><br>
-                <input id="frequencySlider" type="range" min="0.1" max="10.0" step="0.1" value="5.0">
-                <input id="frequencyInput" type="number" min="0.1" max="10.0" step="0.1" value="5.0">
+                <div id="cellLifeControlls">
+                    <div>
+                        <label>Steps per second</label><br>
+                        <input id="frequencySlider" type="range" min="0.1" max="10.0" step="0.1" value="5.0">
+                        <br>
+                        <input id="frequencyInput" type="number" min="0.1" max="10.0" step="0.1" value="5.0">
+                    </div>
+                    <div>
+                        <label>Probability for each cell<br>to be alive (0 to 1)</label><br>
+                        <input id="probabilitySlider" type="range" min="0.00" max="1.00" step="0.01" value="0.5">
+                        <br>
+                        <input id="probabilityInput" type="number" min="0.00" max="1.00" step="0.01" value="0.5">
+                    </div>
+                </div>
             </div>
             <div class="controllSection">
-                <label>Probability for each cell to be alive (0 to 1)</label><br>
-                <input id="probabilitySlider" type="range" min="0.00" max="1.00" step="0.01" value="0.5">
-                <input id="probabilityInput" type="number" min="0.00" max="1.00" step="0.01" value="0.5">
-            </div>
-            <div class="controllSection">
-                <label>Board height (in cells)</label><br>
-                <input id="boardHeightSlider" type="range" min="1" max="100" step="1" value="3">
-                <input id="boardHeightInput" type="number" min="1" max="100" step="1" value="3">
-                <br>
-                <label>Board width (in cells)</label><br>
-                <input  id="boardWidthSlider" type="range" min="1" max="100" step="1" value="3">
-                <input  id="boardWidthInput" type="number" min="1" max="100" step="1" value="3">
-                <br>
-                <label>Cell dimension (in pixels per side)</label><br>
-                <input id="cellSizeSlider" type="range" min="1" max="100" step="1" value="50">
-                <input id="cellSizeInput" type="number" min="1" max="100" step="1" value="50">
-            </div>
-            <div class="controllSection">
-                <label>Autorun controlls</label><br>
-                <button id="startRun">Start</button>
-                <button id="stopRun">Stop</button>
-            </div>
-            <div class="controllSection">
-                <label>Manual controlls</label><br>
+                <h1>Conways <em>Game of Life</em></h1>
                 <button id="stepBackward">Step Backward</button>
+                <button id="toggleRun">Start</button>
                 <button id="stepForward">Step Forward</button>
+                <br>
+                <button id="resetRun">Reset to first state</button>
+                <br>
+                <button id="reinitialiseRun">Reinitialise board</button>
             </div>
             <div class="controllSection">
-                <label>Setback controlls</label><br>
-                <button id="resetRun">Reset to first state</button>
-                <button id="reinitialiseRun">Reinitialise board</button>
+                <div id="sizeControlls">
+                    <div>
+                        <label>Board height (in cells)</label><br>
+                        <input id="boardHeightSlider" type="range" min="1" max="100" step="1" value="3">
+                        <br>
+                        <input id="boardHeightInput" type="number" min="1" max="100" step="1" value="3">
+                    </div>
+                    <div>
+                        <label>Board width (in cells)</label><br>
+                        <input  id="boardWidthSlider" type="range" min="1" max="100" step="1" value="3">
+                        <br>
+                        <input  id="boardWidthInput" type="number" min="1" max="100" step="1" value="3">
+                    </div>
+                    <div>
+                        <label>Cell dimension<br>(in pixels per side)</label><br>
+                        <input id="cellSizeSlider" type="range" min="1" max="100" step="1" value="50">
+                        <br>
+                        <input id="cellSizeInput" type="number" min="1" max="100" step="1" value="50">
+                    </div>
+                </div>
             </div>
         </header>
         <main>
@@ -71,8 +81,8 @@
         <footer>
             <p>This project is open source.</p>
             <p>The source code can be found on
-                <a href="https://github.com/webdevelopment-git/
-                OpenCampusJavaScriptProject">GitHub</a>.
+                <a href="https://github.com/webdevelopment-git/OpenCampusJavaScriptProject">
+                    GitHub</a>.
             </p>
             <p>It was created for a course at 
                 <a href="https://www.opencampus.sh" class="clickable">
